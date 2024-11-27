@@ -8,7 +8,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'root.settings')
 
 django.setup()
 
-from apps.models import Category, Product
+from apps.models import Category, Product, ProductManager
 
 # s = input("kiriting>>>: ").strip()
 
@@ -49,3 +49,13 @@ from datetime import datetime
 #
 # for product in products:
 # 	print(f"nomi: {product.name}, narxi: {product.price}, description: {product.description}")
+
+top_products = Product.objects.top_product()
+for product in top_products:
+    print(product.name, product.price)
+
+# print(Product.objects.filter(is_premium=True, price__gt=15000))
+
+# products = Product.objects.cheap().between_price(10_000, 25_000)
+# for product in products:
+#     print(product)

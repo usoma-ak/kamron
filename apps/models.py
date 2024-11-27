@@ -56,7 +56,8 @@
 # 	moth = IntegerField(choices=enumerate(list(calendar.month_name)[1:], start=1))
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
-from django.db.models import Model, CharField, IntegerField, PositiveIntegerField, ForeignKey, CASCADE
+from django.db.models import Model, CharField, IntegerField, PositiveIntegerField, ForeignKey, CASCADE, BooleanField, \
+    Manager, QuerySet
 
 
 # from django.db.models import Model, CharField
@@ -73,7 +74,34 @@ from django.db.models import Model, CharField, IntegerField, PositiveIntegerFiel
 #             raise ValidationError('Username atmen!')
 #
 #         super().save(*args, **kwargs)
+
+
+# class ProductManager(Manager):
+#     def top_product(self):
+#         return self.filter(is_premium=True, price__gt=15000)
 #
+#     def __str__(self):
+#         return self.name
+
+
+# class ProductQuerySet(QuerySet):
+#     def between_price(self, min_price, max_price):
+#         return self.filter(price__gte=min_price, price__lte=max_price)
+#
+#     def cheap(self):
+#         return self.filter(is_premium=False)
+#
+#
+# class ProductManager(Manager):
+#     def get_queryset(self):
+#         return ProductQuerySet(self.model, using=self._db)
+#
+#     def between_price(self, min_price, max_price):
+#         return self.get_queryset().between_price(min_price, max_price)
+#
+#     def cheap(self):
+#         return self.get_queryset().cheap()
+
 
 class Category(Model):
     name = CharField(max_length=255)
@@ -85,8 +113,12 @@ class Category(Model):
 class Product(Model):
     name = CharField(max_length=255)
     price = PositiveIntegerField()
+    last_price = PositiveIntegerField()
     description = CharField(max_length=255)
+    # is_premium = BooleanField(db_default=False)
+    # is_deleted = BooleanField(db_default=False)
     # user = ForeignKey('apps.User', CASCADE, related_name='user')
+    # objects = ProductManager()
     category = ForeignKey('apps.Category', CASCADE, related_name='products')
 
     def __str__(self):
